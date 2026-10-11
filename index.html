@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¿Cuándo cumple la cumpleañera?</title>
+  <meta name="description" content="Prueba de amistad nivel: experto." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- ============ LANDING ============ -->
+  <main id="landing">
+    <h1 class="pregunta">¿Cuándo cumple años<br /><span>la cumpleañera?</span></h1>
+    <p class="sub">Contesta bien. Vernon está mirando. 👀</p>
+
+    <section class="calendario" id="calendario" aria-label="Calendario">
+      <header class="cal-head">
+        <button class="cal-nav" id="prev" aria-label="Mes anterior">‹</button>
+        <div class="cal-titulo" id="calTitulo"></div>
+        <button class="cal-nav" id="next" aria-label="Mes siguiente">›</button>
+      </header>
+      <div class="cal-semana">
+        <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </section>
+
+    <p class="mensaje" id="mensaje" aria-live="polite">&nbsp;</p>
+    <button class="aceptar" id="aceptar" disabled>Aceptar</button>
+  </main>
+
+  <!-- ============ FIESTA ============ -->
+  <canvas id="fx"></canvas>
+  <div id="flash"></div>
+  <div id="fiesta" hidden>
+    <div id="caos"></div>
+    <div class="titulo-wrap">
+      <h2 class="titulo" id="titulo"></h2>
+      <p class="subtitulo" id="subtitulo">que cumplió años (otra vez)</p>
+      <p class="chiste" id="chiste"></p>
+    </div>
+    <div class="controles">
+      <button id="masCaos">MÁS CAOS 🔥</button>
+      <button id="mute" aria-label="Silenciar">🔊</button>
+    </div>
+  </div>
+
+  <audio id="cancion" preload="auto" loop></audio>
+
+  <script src="js/config.js"></script>
+  <script src="js/vendor/anime.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
