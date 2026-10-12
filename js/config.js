@@ -9,31 +9,22 @@ window.CONFIG = {
   dia: 11,
   mes: 10, // 1 = enero ... 10 = octubre
 
-  // Las Mañanitas de Cepillín (sube tu mp3 con este nombre).
-  // Si no existe, suena una versión de emergencia "en kazoo" hecha por el navegador.
-  audio: "audio/mananitas.mp3",
-
-  // Fotos de Vernon. Pon los archivos en img/vernon/ con estos nombres
-  // (o cambia la lista). Si una foto no existe, sale una tarjeta de reemplazo.
-  vernon: [
-    "img/vernon/1.jpg",
-    "img/vernon/2.jpg",
-    "img/vernon/3.jpg",
-    "img/vernon/4.jpg",
-    "img/vernon/5.jpg",
-    "img/vernon/6.jpg",
+  // Canciones de la fiesta: suenan en este orden y al terminar la última vuelve a empezar.
+  // Si la primera no existe, suena una versión de emergencia "en kazoo" hecha por el navegador.
+  canciones: [
+    "audio/mananitas.mp3",
+    "audio/como-te-voy-a-olvidar.mp3",
   ],
 
-  // Fotos de Twice, en img/twice/
-  twice: [
-    { nombre: "Nayeon", src: "img/twice/nayeon.jpg" },
-    { nombre: "Jeongyeon", src: "img/twice/jeongyeon.jpg" },
-    { nombre: "Momo", src: "img/twice/momo.jpg" },
-    { nombre: "Sana", src: "img/twice/sana.jpg" },
-    { nombre: "Jihyo", src: "img/twice/jihyo.jpg" },
-    { nombre: "Mina", src: "img/twice/mina.jpg" },
-    { nombre: "Dahyun", src: "img/twice/dahyun.jpg" },
-    { nombre: "Chaeyoung", src: "img/twice/chaeyoung.jpg" },
-    { nombre: "Tzuyu", src: "img/twice/tzuyu.jpg" },
+  // Fotos que flotan en órbita alrededor del título durante la fiesta.
+  // Pon los archivos en img/fotos/ con estos nombres (o cambia la lista; pueden ser más o menos).
+  // Si quieres un texto debajo de una foto, usa { src: "img/fotos/1.jpg", texto: "Aquí va el texto" }.
+  // Si una foto no existe, sale una tarjeta de reemplazo.
+  fotos: [
+    "img/fotos/1.jpg",
+    "img/fotos/2.jpg",
+    "img/fotos/3.jpg",
+    "img/fotos/4.jpg",
+    "img/fotos/5.jpg",
   ],
 };
