@@ -3,122 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Maison Cumpleañera</title>
-  <meta name="description" content="Una celebración por invitación exclusiva." />
+  <title>¿Cuándo cumple la cumpleañera?</title>
+  <meta name="description" content="Prueba de amistad nivel: experto." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Fredoka:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <!-- ============ LANDING ============ -->
-  <div id="brillo" aria-hidden="true"></div>
-  <div id="landing">
-    <nav class="nav">
-      <a class="marca" href="#inicio">Maison <em>Cumpleañera</em></a>
-      <ul class="nav-links">
-        <li><a href="#protocolo">Protocolo</a></li>
-        <li><a href="#invitados">Invitados</a></li>
-        <li><a href="#verificacion">Verificación</a></li>
-      </ul>
-      <a class="nav-cta" href="#verificacion">Confirmar</a>
-    </nav>
+  <main id="landing">
+    <h1 class="pregunta">¿Cuándo cumple años<br /><span>la cumpleañera?</span></h1>
+    <p class="sub">Contesta bien. Vernon está mirando. 👀</p>
 
-    <header class="hero" id="inicio">
-      <p class="eyebrow anim-in">Edición privada &nbsp;·&nbsp; MMXXVI</p>
-      <h1 class="hero-titulo">
-        <span class="linea"><span>Una celebración</span></span>
-        <span class="linea"><span><em>por invitación</em></span></span>
-        <span class="linea"><span>exclusiva.</span></span>
-      </h1>
-      <span class="regla anim-regla"></span>
-      <p class="hero-sub anim-in">El Comité Organizador tiene el honor de recibirle. Para acceder, se le solicita confirmar un único dato: la fecha de nacimiento de la homenajeada.</p>
-      <div class="hero-acciones anim-in">
-        <a href="#verificacion" class="btn btn-oro"><span>Verificar fecha</span></a>
-        <a href="#protocolo" class="btn btn-linea"><span>Conocer el protocolo</span></a>
+    <section class="calendario" id="calendario" aria-label="Calendario">
+      <header class="cal-head">
+        <button class="cal-nav" id="prev" aria-label="Mes anterior">‹</button>
+        <div class="cal-titulo" id="calTitulo"></div>
+        <button class="cal-nav" id="next" aria-label="Mes siguiente">›</button>
+      </header>
+      <div class="cal-semana">
+        <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
       </div>
-      <div class="scroll-ind anim-in" aria-hidden="true"><span></span>Desliza</div>
-    </header>
-
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        <span>Elegancia</span><i>✦</i><span>Discreción</span><i>✦</i><span>Mesura</span><i>✦</i><span>Buen gusto</span><i>✦</i><span>Silencio absoluto</span><i>✦</i><span>Cero escándalo</span><i>✦</i>
-        <span>Elegancia</span><i>✦</i><span>Discreción</span><i>✦</i><span>Mesura</span><i>✦</i><span>Buen gusto</span><i>✦</i><span>Silencio absoluto</span><i>✦</i><span>Cero escándalo</span><i>✦</i>
-      </div>
-    </div>
-
-    <section class="seccion" id="protocolo">
-      <div class="seccion-head reveal">
-        <p class="eyebrow">I. &nbsp;Protocolo</p>
-        <h2>Una velada <em>impecable</em>, de principio a fin.</h2>
-      </div>
-      <div class="pilares">
-        <article class="pilar reveal">
-          <span class="num">01</span>
-          <h3>Discreción absoluta</h3>
-          <p>Sin ruido, sin sobresaltos. Una experiencia serena, como corresponde a la ocasión.</p>
-        </article>
-        <article class="pilar reveal">
-          <span class="num">02</span>
-          <h3>Música de cámara</h3>
-          <p>Repertorio clásico cuidadosamente seleccionado, interpretado a volumen moderado.</p>
-        </article>
-        <article class="pilar reveal">
-          <span class="num">03</span>
-          <h3>Ambiente controlado</h3>
-          <p>Ninguna explosión, ningún confeti, ningún imprevisto. Lo garantizamos por escrito.</p>
-        </article>
-      </div>
+      <div class="cal-grid" id="calGrid"></div>
     </section>
 
-    <section class="seccion cifras" id="invitados">
-      <div class="seccion-head reveal">
-        <p class="eyebrow">II. &nbsp;Lista de invitados</p>
-        <h2>Una curaduría <em>rigurosa</em>.</h2>
-      </div>
-      <div class="cifras-grid">
-        <div class="cifra reveal"><strong data-count="1">0</strong><span>homenajeada</span></div>
-        <div class="cifra reveal"><strong data-count="0">0</strong><span>idols de K-pop confirmados</span></div>
-        <div class="cifra reveal"><strong data-count="0">0</strong><span>decibeles de exceso</span></div>
-        <div class="cifra reveal"><strong data-count="100">0</strong><span>% de formalidad</span></div>
-      </div>
-      <blockquote class="cita reveal">“Nadie se presenta sin invitación.”<cite>— Reglamento interno, artículo 1</cite></blockquote>
-    </section>
-
-    <section class="seccion verificacion" id="verificacion">
-      <div class="ver-texto reveal">
-        <p class="eyebrow">III. &nbsp;Verificación</p>
-        <h2>¿Cuándo cumple años <em>la cumpleañera</em>?</h2>
-        <p>Seleccione la fecha en el calendario y confirme. Por motivos de seguridad, las respuestas incorrectas quedarán debidamente registradas.</p>
-      </div>
-      <div class="ver-card reveal">
-        <section class="calendario" id="calendario" aria-label="Calendario">
-          <header class="cal-head">
-            <button class="cal-nav" id="prev" aria-label="Mes anterior">←</button>
-            <div class="cal-titulo" id="calTitulo"></div>
-            <button class="cal-nav" id="next" aria-label="Mes siguiente">→</button>
-          </header>
-          <div class="cal-semana">
-            <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
-          </div>
-          <div class="cal-grid" id="calGrid"></div>
-        </section>
-        <p class="mensaje" id="mensaje" aria-live="polite">&nbsp;</p>
-        <button class="btn btn-oro aceptar" id="aceptar" disabled><span>Confirmar asistencia</span></button>
-      </div>
-    </section>
-
-    <footer class="pie">
-      <span>© MMXXVI Comité Organizador de la Cumpleañera</span>
-      <span>Todos los derechos reservados. Prohibido el caos.</span>
-    </footer>
-  </div>
+    <p class="mensaje" id="mensaje" aria-live="polite">&nbsp;</p>
+    <button class="aceptar" id="aceptar" disabled>Aceptar</button>
+  </main>
 
   <!-- ============ FIESTA ============ -->
   <canvas id="fx"></canvas>
   <div id="flash"></div>
-  <div id="strobe"></div>
   <div id="fiesta" hidden>
     <div id="caos"></div>
     <div class="titulo-wrap">
