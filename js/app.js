@@ -1,4 +1,5 @@
 import * as THREE from "./vendor/three.module.min.js";
+import { crearGalaxia } from "./galaxia.js";
 
 const C = window.CONFIG;
 const $ = (id) => document.getElementById(id);
@@ -17,40 +18,41 @@ let seleccion = null;
 let intentos = 0;
 
 const ESPECIALES = {
-  "1-1": "Lamentamos informarle que el 1 de enero es el cumpleaños del año, no el de la homenajeada.",
-  "14-2": "El comité aclara que la homenajeada no es una tarjeta de Sanborns. Fecha rechazada.",
-  "30-4": "Día del Niño. Coincide con su nivel de madurez, mas no con su fecha de nacimiento.",
-  "10-5": "Día de las Madres. Ella es la madre del grupo, sí, pero esa no es la fecha.",
-  "16-9": "Esa fecha es el Grito. El grito se lo pegará ella a usted si no acierta.",
-  "31-10": "Halloween. La homenajeada inspira respeto, no miedo. Rechazado.",
-  "2-11": "Día de Muertos. Así quedará usted si sigue sin acertar.",
-  "12-12": "Esa fecha le pertenece a la Virgencita. Se le ruega más respeto.",
-  "24-12": "Nochebuena. Ella es buena, pero no tanto. Rechazado.",
-  "25-12": "La homenajeada es especial, pero no tanto como el Niño Dios.",
+  "1-1": "Ese es el cumpleaños del AÑO, no el de ella.",
+  "14-2": "Eso es San Valentín. Ella no es una tarjeta de Sanborns.",
+  "30-4": "Día del niño. Cerca en madurez, lejos en fecha.",
+  "10-5": "Eso es el Día de las Madres. Ella es la madre, sí, pero del grupo.",
+  "16-9": "Eso es el Grito. El grito te lo va a pegar ella a ti.",
+  "31-10": "Halloween. Ella da miedo, pero no tanto.",
+  "2-11": "Día de Muertos. Así vas a quedar si no adivinas.",
+  "12-12": "Esa es la Virgencita. Ten más respeto.",
+  "24-12": "Nochebuena. Ella es buena, pero no tanto.",
+  "25-12": "Ella es especial, pero no TAN especial como el niñito Dios.",
 };
 const CASI = [
-  "Estuvo cerca. Lamentablemente, el reglamento no contempla el «casi».",
-  "A un día de distancia. Como Vernon de su casa: cerca, pero no.",
+  "¡Uy, casi! Pero el 'casi' no apaga velitas.",
+  "Tan cerca y tan lejos. Como Vernon de tu casa.",
 ];
 const MES_BIEN = [
-  "El mes es correcto. El día, lamentablemente, no. Como su vida.",
-  "Octubre, en efecto. El día, sin embargo, deja mucho que desear.",
+  "Vas bien con el mes, mal con el día. Como tu vida.",
+  "Octubre sí, pero ese día no. Concéntrate.",
 ];
 const GENERICOS = [
-  "Respuesta incorrecta. Vernon ha sido notificado y se encuentra decepcionado.",
-  "El comité lamenta informarle que Nayeon rompió en llanto.",
+  "Incorrecto. Vernon está decepcionado.",
+  "Nayeon acaba de llorar por tu culpa.",
   "Error 404: amistad no encontrada.",
-  "Su respuesta ha sido registrada y enviada a su psicólogo.",
-  "Mina ha dejado de seguirle. Lo sentimos mucho.",
-  "Incorrecto. Mientras usted dudaba, Momo se comió el pastel.",
-  "Ni Tzuyu, con toda su seriedad, puede perdonar esto.",
-  "Fecha rechazada. Se descontará un tamal de su cuenta.",
-  "Esa es la fecha del cumpleaños de su ex. Muy mal.",
+  "¿Segura que te conoces? Ve al psicólogo.",
+  "Mina dejó de seguirte.",
+  "No. Y Momo ya se comió el pastel mientras pensabas.",
+  "Ni Tzuyu con su cara de seria te perdona eso.",
+  "Respuesta incorrecta. Se descontará un tamal de tu cuenta.",
+  "Ni con Google te sale. Impresionante.",
+  "Esa fecha es la del cumple de tu ex. Muy mal.",
 ];
 const PISTAS = [
-  "Pista oficial: es en el mes de Halloween, pero antes de los disfraces.",
-  "Segunda pista: el día es capicúa. Como el 11, por ejemplo.",
-  "Por compasión: 11 de octubre. Este mensaje se autodestruirá. 🤫",
+  "Pista: es en el mes de Halloween, pero antes de los disfraces.",
+  "Pista 2: es un número capicúa. Sí, como el 11.",
+  "OK ya, te ayudo: 11 de octubre. Nadie se va a enterar. 🤫",
 ];
 
 const grid = $("calGrid");
@@ -79,7 +81,7 @@ function renderCalendario() {
       aceptar.disabled = false;
       mensaje.innerHTML = "&nbsp;";
       renderCalendario();
-      anime({ targets: grid.querySelector(".sel"), scale: [0.7, 1], duration: 600, easing: "easeOutQuint" });
+      anime({ targets: grid.querySelector(".sel"), scale: [0.6, 1], duration: 500, easing: "easeOutElastic(1, .5)" });
     });
     grid.appendChild(b);
   }
@@ -88,7 +90,7 @@ function renderCalendario() {
 function cambiarMes(delta) {
   vista = new Date(vista.getFullYear(), vista.getMonth() + delta, 1);
   renderCalendario();
-  anime({ targets: grid, translateX: [delta * 24, 0], opacity: [0, 1], duration: 500, easing: "easeOutQuint" });
+  anime({ targets: grid, translateX: [delta * 30, 0], opacity: [0, 1], duration: 350, easing: "easeOutQuad" });
 }
 $("prev").addEventListener("click", () => cambiarMes(-1));
 $("next").addEventListener("click", () => cambiarMes(1));
@@ -110,293 +112,58 @@ aceptar.addEventListener("click", () => {
   if (!ok) {
     mensaje.textContent = mensajeError(seleccion);
     anime({ targets: "#calendario", translateX: [0, -14, 14, -10, 10, -5, 5, 0], duration: 500, easing: "easeInOutSine" });
-    anime({ targets: mensaje, opacity: [0, 1], translateY: [8, 0], duration: 500, easing: "easeOutCubic" });
+    anime({ targets: mensaje, scale: [1.25, 1], duration: 400, easing: "easeOutBack" });
     return;
   }
   empezarFiesta();
 });
 
 renderCalendario();
+anime({
+  targets: ["#landing .pregunta", "#landing .sub", "#calendario", "#mensaje", "#aceptar"],
+  translateY: [30, 0], opacity: [0, 1], delay: anime.stagger(90), duration: 700, easing: "easeOutCubic",
+});
 
 // ============================================================
-//  LANDING: animaciones de entrada, scroll y cursor
-// ============================================================
-anime.timeline({ easing: "easeOutQuint" })
-  .add({ targets: ".nav", translateY: [-30, 0], opacity: [0, 1], duration: 1000 })
-  .add({ targets: ".hero .eyebrow", translateY: [16, 0], opacity: [0, 1], duration: 900 }, 150)
-  .add({ targets: ".hero-titulo .linea > span", translateY: ["110%", "0%"], duration: 1400, delay: anime.stagger(130) }, 250)
-  .add({ targets: ".anim-regla", scaleX: [0, 1], duration: 1400, easing: "easeInOutQuart" }, 800)
-  .add({ targets: [".hero-sub", ".hero-acciones", ".scroll-ind"], translateY: [20, 0], opacity: [0, 1], duration: 1000, delay: anime.stagger(120) }, 1000);
-
-const nav = document.querySelector(".nav");
-window.addEventListener("scroll", () => nav.classList.toggle("solida", window.scrollY > 40), { passive: true });
-
-const observador = new IntersectionObserver((entradas) => {
-  for (const e of entradas) {
-    if (!e.isIntersecting) continue;
-    observador.unobserve(e.target);
-    const hermanos = [...e.target.parentElement.children].filter((x) => x.classList.contains("reveal"));
-    anime({
-      targets: e.target,
-      translateY: [50, 0],
-      opacity: [0, 1],
-      duration: 1300,
-      delay: Math.max(0, hermanos.indexOf(e.target)) * 140,
-      easing: "easeOutQuint",
-    });
-    const num = e.target.querySelector("[data-count]");
-    if (num) {
-      const o = { v: 0 };
-      anime({ targets: o, v: Number(num.dataset.count), round: 1, duration: 2000, easing: "easeOutExpo", update: () => { num.textContent = o.v; } });
-    }
-  }
-}, { threshold: 0.18 });
-document.querySelectorAll(".reveal").forEach((el) => observador.observe(el));
-
-const brillo = $("brillo");
-let mouseX = 0, mouseY = 0;
-window.addEventListener("pointermove", (e) => {
-  brillo.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-  mouseX = e.clientX / window.innerWidth - 0.5;
-  mouseY = e.clientY / window.innerHeight - 0.5;
-}, { passive: true });
-
-// ============================================================
-//  AUDIO: Las Mañanitas + DEMASIADO RUIDO (todo sintetizado)
+//  AUDIO: Las Mañanitas (mp3) o kazoo de emergencia
 // ============================================================
 const cancion = $("cancion");
 cancion.src = C.audio;
 let ctx = null;
-let bus = null;      // todo el ruido pasa por aquí
-let master = null;   // volumen general (para silenciar)
+let kazooTimer = null;
 let silenciado = false;
 
 function audioCtx() {
-  if (!ctx) {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const comp = ctx.createDynamicsCompressor();
-    comp.threshold.value = -14;
-    comp.knee.value = 6;
-    comp.ratio.value = 10;
-    master = ctx.createGain();
-    master.gain.value = 1;
-    comp.connect(master).connect(ctx.destination);
-    bus = comp;
-  }
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
   return ctx;
 }
 
-function ruidoBuffer(seg, curva = 3) {
+function boom() {
   const a = audioCtx();
-  const len = Math.floor(a.sampleRate * seg);
+  const len = a.sampleRate * 2.2;
   const buf = a.createBuffer(1, len, a.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, curva);
-  return buf;
-}
-
-function env(g, t, pico, ataque, dur) {
-  g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(pico, t + ataque);
-  g.gain.setValueAtTime(pico, t + Math.max(ataque, dur - 0.05));
-  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-}
-
-const SFX = {
-  boom(vol = 1.4) {
-    const a = audioCtx(), t = a.currentTime;
-    const src = a.createBufferSource();
-    src.buffer = ruidoBuffer(2.2);
-    const lp = a.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.setValueAtTime(2600, t);
-    lp.frequency.exponentialRampToValueAtTime(70, t + 1.8);
-    const g = a.createGain();
-    g.gain.value = vol;
-    src.connect(lp).connect(g).connect(bus);
-    src.start(t);
-    const o = a.createOscillator(), og = a.createGain();
-    o.frequency.setValueAtTime(150, t);
-    o.frequency.exponentialRampToValueAtTime(28, t + 0.9);
-    og.gain.setValueAtTime(vol, t);
-    og.gain.exponentialRampToValueAtTime(0.001, t + 1);
-    o.connect(og).connect(bus);
-    o.start(t); o.stop(t + 1.1);
-  },
-
-  // Bocina de estadio: BWAA BWAA BWAAAAA
-  airhorn(t0) {
-    const a = audioCtx();
-    let t = t0 ?? a.currentTime;
-    const base = pick([233, 247, 262, 311]);
-    for (const dur of [0.16, 0.16, 0.75]) {
-      const g = a.createGain();
-      env(g, t, 0.35, 0.015, dur);
-      const bp = a.createBiquadFilter();
-      bp.type = "peaking"; bp.frequency.value = 1400; bp.gain.value = 10;
-      g.connect(bp).connect(bus);
-      for (const m of [1, 1.008, 2, 2.012, 3]) {
-        const o = a.createOscillator();
-        o.type = "sawtooth";
-        o.frequency.setValueAtTime(base * m * 0.94, t);
-        o.frequency.linearRampToValueAtTime(base * m, t + 0.05);
-        o.connect(g);
-        o.start(t); o.stop(t + dur + 0.02);
-      }
-      t += dur + 0.06;
-    }
-  },
-
-  sirena(dur = 3) {
-    const a = audioCtx(), t = a.currentTime;
-    const o = a.createOscillator();
-    o.type = "square";
-    const lfo = a.createOscillator(), lg = a.createGain();
-    lfo.frequency.value = pick([0.9, 1.6, 4]);
-    lg.gain.value = 380;
-    o.frequency.value = 900;
-    lfo.connect(lg).connect(o.frequency);
-    const lp = a.createBiquadFilter();
-    lp.type = "lowpass"; lp.frequency.value = 2400;
-    const g = a.createGain();
-    env(g, t, 0.12, 0.1, dur);
-    o.connect(lp).connect(g).connect(bus);
-    o.start(t); lfo.start(t);
-    o.stop(t + dur); lfo.stop(t + dur);
-  },
-
-  // Espantasuegras
-  espantasuegras() {
-    const a = audioCtx(), t = a.currentTime;
-    const dur = rand(0.6, 1.1);
-    const o = a.createOscillator();
-    o.type = "sawtooth";
-    o.frequency.setValueAtTime(rand(330, 420), t);
-    o.frequency.linearRampToValueAtTime(rand(440, 560), t + dur * 0.3);
-    o.frequency.linearRampToValueAtTime(rand(300, 380), t + dur);
-    const vib = a.createOscillator(), vg = a.createGain();
-    vib.frequency.value = 22; vg.gain.value = 18;
-    vib.connect(vg).connect(o.frequency);
-    const bp = a.createBiquadFilter();
-    bp.type = "bandpass"; bp.frequency.value = 1500; bp.Q.value = 2;
-    const g = a.createGain();
-    env(g, t, 0.5, 0.03, dur);
-    o.connect(bp).connect(g).connect(bus);
-    o.start(t); vib.start(t); o.stop(t + dur); vib.stop(t + dur);
-  },
-
-  // Silbido de cohete subiendo
-  silbido() {
-    const a = audioCtx(), t = a.currentTime;
-    const o = a.createOscillator();
-    o.type = "sine";
-    o.frequency.setValueAtTime(700, t);
-    o.frequency.exponentialRampToValueAtTime(rand(2400, 3400), t + 0.45);
-    const g = a.createGain();
-    env(g, t, 0.1, 0.05, 0.45);
-    o.connect(g).connect(bus);
-    o.start(t); o.stop(t + 0.5);
-  },
-
-  // Tronido + chisporroteo del cohete
-  crack() {
-    const a = audioCtx(), t = a.currentTime;
-    const src = a.createBufferSource();
-    src.buffer = ruidoBuffer(0.5, 5);
-    const hp = a.createBiquadFilter();
-    hp.type = "highpass"; hp.frequency.value = 300;
-    const g = a.createGain(); g.gain.value = 0.9;
-    src.connect(hp).connect(g).connect(bus);
-    src.start(t);
-    for (let i = 0; i < 14; i++) {
-      const s = a.createBufferSource();
-      s.buffer = ruidoBuffer(0.02, 1);
-      const sg = a.createGain(); sg.gain.value = rand(0.15, 0.45);
-      s.connect(sg).connect(bus);
-      s.start(t + 0.12 + Math.random() * 0.8);
-    }
-  },
-
-  boing() {
-    const a = audioCtx(), t = a.currentTime;
-    const o = a.createOscillator();
-    o.type = "sine";
-    const f = rand(180, 420);
-    o.frequency.setValueAtTime(f, t);
-    o.frequency.exponentialRampToValueAtTime(f * 0.45, t + 0.35);
-    const vib = a.createOscillator(), vg = a.createGain();
-    vib.frequency.value = 28; vg.gain.value = f * 0.12;
-    vib.connect(vg).connect(o.frequency);
-    const g = a.createGain();
-    env(g, t, 0.22, 0.005, 0.38);
-    o.connect(g).connect(bus);
-    o.start(t); vib.start(t); o.stop(t + 0.4); vib.stop(t + 0.4);
-  },
-
-  pop() {
-    const a = audioCtx(), t = a.currentTime;
-    const o = a.createOscillator();
-    o.frequency.setValueAtTime(900, t);
-    o.frequency.exponentialRampToValueAtTime(120, t + 0.12);
-    const g = a.createGain();
-    env(g, t, 0.6, 0.002, 0.14);
-    o.connect(g).connect(bus);
-    o.start(t); o.stop(t + 0.15);
-  },
-
-  cencerro() {
-    const a = audioCtx(), t = a.currentTime;
-    const g = a.createGain();
-    env(g, t, 0.25, 0.002, 0.3);
-    const bp = a.createBiquadFilter();
-    bp.type = "bandpass"; bp.frequency.value = 2640; bp.Q.value = 3;
-    g.connect(bp).connect(bus);
-    for (const f of [587, 845]) {
-      const o = a.createOscillator();
-      o.type = "square"; o.frequency.value = f;
-      o.connect(g); o.start(t); o.stop(t + 0.3);
-    }
-  },
-
-  // "¡Wuuu!" de multitud (ruido filtrado con formantes que suben)
-  multitud(dur = 2) {
-    const a = audioCtx(), t = a.currentTime;
-    const src = a.createBufferSource();
-    src.buffer = ruidoBuffer(dur, 0.6);
-    const bp = a.createBiquadFilter();
-    bp.type = "bandpass"; bp.Q.value = 1.4;
-    bp.frequency.setValueAtTime(500, t);
-    bp.frequency.linearRampToValueAtTime(1400, t + dur * 0.4);
-    bp.frequency.linearRampToValueAtTime(900, t + dur);
-    const g = a.createGain();
-    env(g, t, 0.7, 0.25, dur);
-    src.connect(bp).connect(g).connect(bus);
-    src.start(t);
-  },
-};
-
-let ultimoBoing = 0;
-function boingLimitado() {
-  const ahora = performance.now();
-  if (ahora - ultimoBoing < 120) return;
-  ultimoBoing = ahora;
-  SFX.boing();
-}
-
-// El escándalo de fondo: cada rato suena algo distinto encima de la canción
-function escandalo() {
-  const sonidos = [SFX.airhorn, SFX.airhorn, SFX.espantasuegras, SFX.espantasuegras, SFX.cencerro, () => SFX.sirena(2), () => SFX.multitud(1.6)];
-  const tick = () => {
-    if (!document.hidden) {
-      pick(sonidos)();
-      if (Math.random() < 0.45) setTimeout(() => pick(sonidos)(), rand(120, 400));
-      if (Math.random() < 0.3) shake = Math.max(shake, 5);
-    }
-    setTimeout(tick, rand(500, 1400));
-  };
-  tick();
-  // cencerro constante, como si alguien no supiera parar
-  setInterval(() => { if (!document.hidden && Math.random() < 0.7) SFX.cencerro(); }, 380);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+  const src = a.createBufferSource();
+  src.buffer = buf;
+  const lp = a.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.setValueAtTime(2200, a.currentTime);
+  lp.frequency.exponentialRampToValueAtTime(80, a.currentTime + 1.8);
+  const g = a.createGain();
+  g.gain.value = 1.4;
+  src.connect(lp).connect(g).connect(a.destination);
+  src.start();
+  // golpe grave
+  const o = a.createOscillator();
+  const og = a.createGain();
+  o.frequency.setValueAtTime(140, a.currentTime);
+  o.frequency.exponentialRampToValueAtTime(30, a.currentTime + 0.8);
+  og.gain.setValueAtTime(1, a.currentTime);
+  og.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.9);
+  o.connect(og).connect(a.destination);
+  o.start();
+  o.stop(a.currentTime + 1);
 }
 
 // Melodía aproximada de "Las Mañanitas" (tradicional), en kazoo digital.
@@ -407,14 +174,14 @@ const MELODIA = [
   ["E5", 1], ["E5", 1], ["F5", 1], ["G5", 1], ["G5", 1], ["G5", 1], ["F5", 1], ["E5", 1], ["D5", 2],
   ["D5", 1], ["E5", 1], ["F5", 1], ["E5", 1], ["D5", 1], ["B4", 1], ["C5", 3], [null, 2],
 ];
-const kazoo = { activo: false };
 function tocarKazoo() {
   const a = audioCtx();
   const beat = 0.3;
   let t = a.currentTime + 0.05;
-  const vol = a.createGain();
-  vol.gain.value = 0.3;
-  vol.connect(bus);
+  const master = a.createGain();
+  master.gain.value = silenciado ? 0 : 0.18;
+  master.connect(a.destination);
+  kazoo.master = master;
   for (const [nota, dur] of MELODIA) {
     if (nota) {
       const o = a.createOscillator();
@@ -434,21 +201,21 @@ function tocarKazoo() {
       g.gain.linearRampToValueAtTime(1, t + 0.03);
       g.gain.setValueAtTime(1, t + dur * beat - 0.06);
       g.gain.linearRampToValueAtTime(0, t + dur * beat - 0.01);
-      o.connect(bp).connect(g).connect(vol);
+      o.connect(bp).connect(g).connect(master);
       o.start(t); vib.start(t);
       o.stop(t + dur * beat); vib.stop(t + dur * beat);
     }
     t += dur * beat;
   }
-  setTimeout(tocarKazoo, (t - a.currentTime) * 1000);
+  kazooTimer = setTimeout(tocarKazoo, (t - a.currentTime) * 1000);
 }
+const kazoo = { activo: false, master: null };
 
 let mp3Listo = Promise.resolve(false);
 function ponerCancion() {
   mp3Listo.then((ok) => {
     if (ok) {
       cancion.currentTime = 0;
-      cancion.volume = 1;
       cancion.muted = silenciado;
     } else if (!kazoo.activo) {
       kazoo.activo = true;
@@ -467,7 +234,7 @@ cancion.addEventListener("error", () => {
 $("mute").addEventListener("click", () => {
   silenciado = !silenciado;
   cancion.muted = silenciado;
-  if (master) master.gain.value = silenciado ? 0 : 1;
+  if (kazoo.master) kazoo.master.gain.value = silenciado ? 0 : 0.18;
   $("mute").textContent = silenciado ? "🔇" : "🔊";
 });
 
@@ -542,44 +309,15 @@ function onda(color = 0xffffff, velocidad = 1.6) {
   rings.push({ m, s: 1, v: velocidad });
 }
 
-// Fondo de estrellitas que gira
-const estrellas = (() => {
-  const n = 1500;
-  const pos = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    pos[i * 3] = rand(-300, 300);
-    pos[i * 3 + 1] = rand(-200, 200);
-    pos[i * 3 + 2] = rand(-300, 0);
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({ size: 1.4, map: sprite, color: 0xffe6f5, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
-  const p = new THREE.Points(geo, mat);
-  scene.add(p);
-  return p;
-})();
-
-// Polvo dorado flotando en el landing (elegante... por ahora)
-const polvo = (() => {
-  const n = 900;
-  const pos = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    pos[i * 3] = rand(-160, 160);
-    pos[i * 3 + 1] = rand(-90, 90);
-    pos[i * 3 + 2] = rand(-120, 30);
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({ size: 0.9, map: sprite, color: 0xd9b979, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending });
-  const p = new THREE.Points(geo, mat);
-  scene.add(p);
-  return p;
-})();
-let enLanding = true;
+// Galaxia de fondo (landing) + estrellas lejanas que se quedan para la fiesta
+const galaxia = crearGalaxia(scene, renderer, camera);
+const reloj = new THREE.Clock();
 
 let shake = 0;
 function loop() {
   requestAnimationFrame(loop);
+  const dt = Math.min(reloj.getDelta(), 0.05);
+  galaxia.update(reloj.elapsedTime, dt);
   for (let i = bursts.length - 1; i >= 0; i--) {
     const b = bursts[i];
     const p = b.pts.geometry.attributes.position.array;
@@ -605,71 +343,19 @@ function loop() {
       rings.splice(i, 1);
     }
   }
-  estrellas.rotation.z += 0.0008;
-  estrellas.rotation.y += 0.0003;
-  if (polvo.visible) {
-    const arr = polvo.geometry.attributes.position.array;
-    for (let j = 1; j < arr.length; j += 3) { arr[j] += 0.03; if (arr[j] > 90) arr[j] = -90; }
-    polvo.geometry.attributes.position.needsUpdate = true;
-    polvo.rotation.y += 0.0004;
-  }
-  const px = enLanding ? mouseX * 8 : 0, py = enLanding ? -mouseY * 5 : 0;
-  camera.position.x += (px - camera.position.x) * 0.04;
-  camera.position.y += (py - camera.position.y) * 0.04;
-  camera.position.x += (Math.random() - 0.5) * shake;
-  camera.position.y += (Math.random() - 0.5) * shake;
-  if (!enLanding) { camera.position.x *= 0.8; camera.position.y *= 0.8; }
+  camera.position.x = (Math.random() - 0.5) * shake;
+  camera.position.y = (Math.random() - 0.5) * shake;
   shake *= 0.92;
   renderer.render(scene, camera);
 }
 loop();
 
 function fuegosArtificiales() {
-  const uno = () => {
-    if (document.hidden) return;
-    SFX.silbido();
-    setTimeout(() => {
-      const w = 70 * camera.aspect;
-      burst(rand(-w * 0.8, w * 0.8), rand(-10, 45), rand(-40, 0), 320, rand(1.2, 2.2), 1.8, [pick(PALETA), pick(PALETA), 0xffffff]);
-      SFX.crack();
-    }, 420);
-  };
-  setInterval(uno, 650);
-  setInterval(() => { if (Math.random() < 0.6) uno(); }, 1100);
-}
-
-// Estrobo de colores
-function estrobo() {
-  const el = $("strobe");
-  const colores = ["#ff3d9a", "#ffd23f", "#2ee6d6", "#a66bff", "#ff7a2f", "#4dff88"];
   setInterval(() => {
     if (document.hidden) return;
-    el.style.background = `radial-gradient(circle at ${rand(10, 90)}% ${rand(10, 90)}%, ${pick(colores)}, transparent 60%)`;
-    anime({ targets: el, opacity: [rand(0.25, 0.5), 0], duration: 420, easing: "easeOutQuad" });
-  }, 480);
-}
-
-// Lluvia de emojis
-const EMOJIS = ["🎉", "🎂", "🎈", "🥳", "📢", "🔥", "💥", "🎊", "🍰", "🪅", "🌮", "💃", "🕺", "✨"];
-function lluvia() {
-  setInterval(() => {
-    if (document.hidden) return;
-    const el = document.createElement("div");
-    el.className = "lluvia";
-    el.textContent = pick(EMOJIS);
-    el.style.fontSize = rand(1.6, 3.6) + "rem";
-    $("caos").appendChild(el);
-    const x = rand(0, window.innerWidth - 40);
-    anime({
-      targets: el,
-      translateX: [x, x + rand(-160, 160)],
-      translateY: [-80, window.innerHeight + 80],
-      rotate: [0, rand(-720, 720)],
-      duration: rand(1800, 3600),
-      easing: "easeInQuad",
-      complete: () => el.remove(),
-    });
-  }, 140);
+    const w = 70 * camera.aspect;
+    burst(rand(-w * 0.8, w * 0.8), rand(-10, 45), rand(-40, 0), 260, rand(1.2, 2), 1.8, [pick(PALETA), pick(PALETA), 0xffffff]);
+  }, 900);
 }
 
 // ============================================================
@@ -677,18 +363,15 @@ function lluvia() {
 // ============================================================
 function empezarFiesta() {
   aceptar.disabled = true;
-  mensaje.textContent = "Verificando credenciales… ⚠️ Se ha detectado un nivel de fiesta no autorizado.";
+  mensaje.textContent = "⚠️ Nivel de fiesta peligroso detectado...";
   // Desbloquea el audio con este clic (iOS solo deja sonar si empieza dentro del clic):
   // la canción arranca en silencio y se "prende" en la explosión.
   audioCtx().resume();
   cancion.muted = true;
   mp3Listo = cancion.play().then(() => true, () => false);
 
-  // tiembla todo antes de explotar
-  SFX.sirena(1.2);
-  anime({ targets: ".nav", opacity: 0, duration: 300, easing: "linear" });
-  const landingEl = $("landing");
-  landingEl.style.transformOrigin = `50% ${window.scrollY + window.innerHeight / 2}px`;
+  // la galaxia se colapsa en un agujero negro mientras tiembla todo
+  galaxia.colapsar(1050);
   let n = 0;
   const temblor = setInterval(() => {
     n++;
@@ -700,24 +383,14 @@ function empezarFiesta() {
 }
 
 function explotar() {
-  SFX.boom(1.8);
-  setTimeout(() => SFX.boom(1.2), 180);
-  SFX.airhorn();
-  SFX.multitud(3);
-  SFX.sirena(5);
-  setTimeout(() => SFX.airhorn(), 900);
-  shake = 16;
-  enLanding = false;
-  anime({ targets: polvo.material, opacity: 0, duration: 400, easing: "linear", complete: () => { polvo.visible = false; } });
+  boom();
+  shake = 14;
+  galaxia.explotar();
   anime({ targets: "#flash", opacity: [1, 0], duration: 1100, easing: "easeOutQuad" });
   anime({
     targets: "#landing",
     scale: [1.1, 4], opacity: [1, 0], rotate: 25, duration: 600, easing: "easeInQuad",
-    complete: () => {
-      $("landing").style.display = "none";
-      document.querySelector(".nav").style.display = "none";
-      window.scrollTo(0, 0);
-    },
+    complete: () => { $("landing").style.display = "none"; },
   });
   // explosión principal
   burst(0, 0, 0, 4000, 4.2, 2.6);
@@ -725,7 +398,6 @@ function explotar() {
   onda(0xffffff, 2.4);
   setTimeout(() => onda(0xff3d9a, 1.8), 120);
   setTimeout(() => onda(0x2ee6d6, 1.4), 260);
-  anime({ targets: estrellas.material, opacity: [0, 0.8], duration: 2500, easing: "easeOutQuad" });
 
   document.body.classList.add("fiesta");
   ponerCancion();
@@ -734,11 +406,8 @@ function explotar() {
     $("fiesta").hidden = false;
     animarTitulo();
     fuegosArtificiales();
-    estrobo();
-    lluvia();
   }, 450);
   setTimeout(() => soltarCaos(), 1600);
-  setTimeout(escandalo, 1800);
 }
 
 function animarTitulo() {
@@ -889,8 +558,6 @@ function crearBouncer(tipo, x, y) {
     const r = el.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     burstEnPantalla(cx, cy, 500);
-    SFX.pop();
-    SFX.espantasuegras();
     anime({ targets: inner, scale: [1.5, 1], duration: 600, easing: "easeOutElastic(1, .4)" });
     b.vy = -rand(16, 24); b.vx = rand(-12, 12); b.vr = rand(-20, 20);
     crearBouncer(tipo, b.x, b.y);
@@ -922,7 +589,6 @@ function fisica() {
       // rebota y a veces pega un brinco extra para mantener el caos
       b.vy = -Math.abs(b.vy) * 0.88 - (Math.random() < 0.35 ? rand(6, 14) : 0);
       if (Math.abs(b.vy) < 9) b.vy = -rand(12, 20);
-      if (Math.random() < 0.5) boingLimitado();
       b.vx += rand(-3, 3);
       b.vx = Math.max(-12, Math.min(12, b.vx));
     }
@@ -962,11 +628,8 @@ function vernonGigante() {
 }
 
 $("masCaos").addEventListener("click", () => {
-  shake = 14;
-  SFX.boom(1.6);
-  SFX.airhorn();
-  SFX.sirena(2.5);
-  SFX.multitud(2);
+  shake = 10;
+  boom();
   burst(0, 0, 0, 2500, 3.4, 2.4);
   onda(0xffd23f, 2);
   anime({ targets: "#flash", opacity: [0.7, 0], duration: 600, easing: "easeOutQuad" });
