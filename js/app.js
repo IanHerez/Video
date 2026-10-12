@@ -407,7 +407,7 @@ function explotar() {
     animarTitulo();
     fuegosArtificiales();
   }, 450);
-  setTimeout(() => soltarCaos(), 1600);
+  setTimeout(() => iniciarGaleria(), 900);
 }
 
 function animarTitulo() {
@@ -443,8 +443,6 @@ function animarTitulo() {
 
 const CHISTES = [
   "Un año más viejita, pero con el mismo nivel de madurez. Respeto.",
-  "Vernon canceló su gira para venir. (Mentira, pero mira cómo brinca.)",
-  "Twice vino completo. Las 9. Nadie les pagó. Tal es tu poder.",
   "Hoy no se cuentan calorías. Se cuentan pasteles.",
   "Las arrugas son solo risas guardadas. Tienes muchas risas guardadas. 👀",
   "Momo ya se comió tu pastel. Pero te dejó la vela.",
@@ -467,103 +465,50 @@ function rotarChistes() {
 }
 
 // ------------------------------------------------------------
-//  Vernon + Twice brincando por toda la pantalla
+//  GALERÍA: las fotos flotan en órbita alrededor del título
 // ------------------------------------------------------------
-const caos = $("caos");
-const bouncers = [];
-const MAX = 46;
+const galeria = $("galeria");
+const visor = $("visor");
+const fotos = [];
+const orbita = { giro: -Math.PI / 2, vel: 0.14, extra: 0, pausa: 1 };
+const EMOJIS = ["📸", "💖", "🎂", "✨", "🎉", "🥳", "🌟", "🎈"];
 
-const FRASES_VERNON = [
-  "¿Quién me invitó? Nadie. Aquí estoy.",
-  "Hansol vino a cantar 🎤",
-  "Feliz cumple, bro",
-  "Traje regalo: yo",
-  "Seventeen pero yo solito",
-  "¡ARRAPETE!",
-];
-const FRASES_TWICE = [
-  "Cheer up, cumpleañera!",
-  "¡Feliz cumple! 🍭",
-  "Venimos las 9 🫶",
-  "¿Y el pastel?",
-  "¡Arriba la cumpleañera!",
-  "Wooo 🎉",
-];
-
-function tamCard() {
-  return Math.round(Math.min(150, Math.max(78, window.innerWidth * 0.11)));
+function tamFoto() {
+  return Math.round(Math.min(170, Math.max(84, window.innerWidth * 0.12)));
 }
 
-function placeholder(tipo, nombre) {
+function placeholderFoto(i) {
   const d = document.createElement("div");
   d.className = "placeholder";
-  const emoji = tipo === "vernon" ? pick(["😎", "🕺", "🎤", "🧢"]) : pick(["💖", "🍭", "✨", "🎀"]);
-  const nota = tipo === "vernon" ? "foto en camino" : "llegando tarde";
-  d.innerHTML = `<span class="emoji">${emoji}</span><span class="nombre"></span><span class="nota">${nota}</span>`;
-  d.querySelector(".nombre").textContent = nombre;
+  d.innerHTML = `<span class="emoji">${EMOJIS[i % EMOJIS.length]}</span><span class="nota">foto ${i + 1}</span>`;
   return d;
 }
 
-function crearBouncer(tipo, x, y) {
-  if (bouncers.length >= MAX) {
-    const viejo = bouncers.shift();
-    viejo.el.remove();
-  }
-  const s = Math.round(tamCard() * rand(0.75, 1.25));
-  const el = document.createElement("div");
-  el.className = `bouncer ${tipo}`;
-  const inner = document.createElement("div");
-  inner.className = "inner";
-  inner.style.setProperty("--s", s + "px");
-
-  let src, nombre;
-  if (tipo === "vernon") {
-    src = pick(C.vernon);
-    nombre = "VERNON";
-  } else {
-    const m = pick(C.twice);
-    src = m.src; nombre = m.nombre.toUpperCase();
-  }
-  const img = new Image();
-  img.alt = nombre;
-  img.draggable = false;
-  img.onerror = () => img.replaceWith(placeholder(tipo, nombre));
-  img.src = src;
-  inner.appendChild(img);
-
-  const bur = document.createElement("div");
-  bur.className = "burbuja";
-  bur.textContent = pick(tipo === "vernon" ? FRASES_VERNON : FRASES_TWICE);
-  inner.appendChild(bur);
-
-  el.appendChild(inner);
-  caos.appendChild(el);
-
-  const b = {
-    el, inner, bur, s,
-    x: x ?? rand(0, window.innerWidth - s),
-    y: y ?? rand(-s * 2, window.innerHeight * 0.3),
-    vx: rand(-7, 7) || 3,
-    vy: rand(-14, 2),
-    rot: rand(-40, 40),
-    vr: rand(-6, 6),
-  };
-  bouncers.push(b);
-
-  anime({ targets: inner, scale: [0, 1], rotate: [anime.random(-720, 720), 0], duration: 1100, easing: "easeOutElastic(1, .5)" });
-
-  el.addEventListener("pointerdown", (e) => {
-    e.preventDefault();
-    // al tocarlo: se multiplica y explota
-    const r = el.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    burstEnPantalla(cx, cy, 500);
-    anime({ targets: inner, scale: [1.5, 1], duration: 600, easing: "easeOutElastic(1, .4)" });
-    b.vy = -rand(16, 24); b.vx = rand(-12, 12); b.vr = rand(-20, 20);
-    crearBouncer(tipo, b.x, b.y);
-    crearBouncer(pick(["vernon", "twice"]), b.x, b.y);
+function crearFotos() {
+  C.fotos.forEach((f, i) => {
+    const src = typeof f === "string" ? f : f.src;
+    const texto = typeof f === "string" ? "" : f.texto || "";
+    const el = document.createElement("figure");
+    el.className = "foto";
+    const marco = document.createElement("div");
+    marco.className = "marco";
+    const img = new Image();
+    img.alt = texto || `Foto ${i + 1}`;
+    img.draggable = false;
+    img.onerror = () => img.replaceWith(placeholderFoto(i));
+    img.src = src;
+    marco.appendChild(img);
+    el.appendChild(marco);
+    if (texto) {
+      const cap = document.createElement("figcaption");
+      cap.textContent = texto;
+      el.appendChild(cap);
+    }
+    galeria.appendChild(el);
+    const foto = { el, marco, i, fase: Math.random() * Math.PI * 2, entrada: 0, x: 0, y: 0 };
+    fotos.push(foto);
+    el.addEventListener("click", () => abrirFoto(foto));
   });
-  return b;
 }
 
 function burstEnPantalla(px, py, n = 400) {
@@ -575,57 +520,69 @@ function burstEnPantalla(px, py, n = 400) {
   burst(p.x, p.y, 0, n, 1.8, 2);
 }
 
-const GRAV = 0.55;
-function fisica() {
-  requestAnimationFrame(fisica);
+let ultimo = performance.now();
+function animarGaleria(ahora) {
+  requestAnimationFrame(animarGaleria);
+  const dt = Math.min((ahora - ultimo) / 1000, 0.05);
+  ultimo = ahora;
+  const t = ahora / 1000;
   const W = window.innerWidth, H = window.innerHeight;
-  for (const b of bouncers) {
-    b.vy += GRAV;
-    b.x += b.vx; b.y += b.vy; b.rot += b.vr;
-    if (b.x < 0) { b.x = 0; b.vx = Math.abs(b.vx); b.vr = rand(-10, 10); }
-    if (b.x > W - b.s) { b.x = W - b.s; b.vx = -Math.abs(b.vx); b.vr = rand(-10, 10); }
-    if (b.y > H - b.s) {
-      b.y = H - b.s;
-      // rebota y a veces pega un brinco extra para mantener el caos
-      b.vy = -Math.abs(b.vy) * 0.88 - (Math.random() < 0.35 ? rand(6, 14) : 0);
-      if (Math.abs(b.vy) < 9) b.vy = -rand(12, 20);
-      b.vx += rand(-3, 3);
-      b.vx = Math.max(-12, Math.min(12, b.vx));
-    }
-    b.vr *= 0.99;
-    b.el.style.transform = `translate3d(${b.x}px, ${b.y}px, 0) rotate(${b.rot}deg)`;
+  const vertical = W < H;
+  const rx = vertical ? W * 0.36 : Math.min(W * 0.4, 600);
+  const ry = vertical ? H * 0.37 : H * 0.36;
+  const s = tamFoto();
+  orbita.giro += (orbita.vel + orbita.extra) * orbita.pausa * dt;
+  orbita.extra *= 0.97;
+  const n = fotos.length;
+  for (const f of fotos) {
+    const a = orbita.giro + (f.i / n) * Math.PI * 2;
+    const prof = (Math.sin(a) + 1) / 2; // 0 = atrás (arriba), 1 = adelante (abajo)
+    const e = f.entrada;
+    f.x = W / 2 + Math.cos(a) * rx * e;
+    f.y = H / 2 + (Math.sin(a) * ry + Math.sin(t * 1.3 + f.fase) * 10) * e;
+    const esc = (0.68 + 0.42 * prof) * Math.min(Math.max(e, 0), 1.2);
+    const rot = Math.sin(t * 0.8 + f.fase) * 6;
+    f.el.style.setProperty("--s", s + "px");
+    f.el.style.transform = `translate3d(${f.x - s / 2}px, ${f.y - s / 2}px, 0) scale(${esc}) rotate(${rot}deg)`;
+    f.el.style.zIndex = String(Math.round(prof * 100));
+    f.el.style.opacity = String(0.5 + 0.5 * prof);
   }
 }
 
-function soltarCaos() {
-  fisica();
-  let i = 0;
-  const inicial = window.innerWidth < 600 ? 12 : 20;
-  const t = setInterval(() => {
-    crearBouncer(i % 2 === 0 ? "vernon" : "twice");
-    if (++i >= inicial) clearInterval(t);
-  }, 160);
+function iniciarGaleria() {
+  crearFotos();
+  requestAnimationFrame(animarGaleria);
+  // salen disparadas desde el centro de la explosión a su lugar en la órbita
+  anime({ targets: fotos, entrada: [0, 1], delay: anime.stagger(140), duration: 1600, easing: "easeOutElastic(1, .6)" });
 
-  // burbujitas que aparecen al azar
+  // cada tanto una foto "late" y suelta chispas, para que el caos siga vivo
   setInterval(() => {
-    if (!bouncers.length) return;
-    const b = pick(bouncers);
-    b.bur.textContent = pick(b.el.classList.contains("vernon") ? FRASES_VERNON : FRASES_TWICE);
-    anime({ targets: b.bur, opacity: [0, 1, 1, 0], scale: [0.5, 1], duration: 2200, easing: "easeOutQuad" });
-  }, 700);
-
-  // de vez en cuando, Vernon gigante cruza la pantalla
-  setInterval(vernonGigante, 9000);
+    if (!fotos.length || !visor.hidden) return;
+    const f = pick(fotos);
+    burstEnPantalla(f.x, f.y, 220);
+    anime({ targets: f.marco, scale: [1.25, 1], duration: 900, easing: "easeOutElastic(1, .4)" });
+  }, 2200);
 }
 
-function vernonGigante() {
-  const b = crearBouncer("vernon", 0, window.innerHeight * 0.2);
-  b.s = Math.round(tamCard() * 2.2);
-  b.inner.style.setProperty("--s", b.s + "px");
-  b.vx = 9; b.vy = -6;
-  b.bur.textContent = "¡FELIZ CUMPLE! 🎂";
-  anime({ targets: b.bur, opacity: [0, 1], duration: 400 });
+function abrirFoto(f) {
+  visor.innerHTML = "";
+  const copia = f.marco.cloneNode(true);
+  copia.className = "marco grande";
+  visor.appendChild(copia);
+  const cap = f.el.querySelector("figcaption");
+  if (cap) visor.appendChild(cap.cloneNode(true));
+  visor.hidden = false;
+  orbita.pausa = 0.15;
+  burstEnPantalla(window.innerWidth / 2, window.innerHeight / 2, 700);
+  anime({ targets: visor, opacity: [0, 1], duration: 300, easing: "easeOutQuad" });
+  anime({ targets: copia, scale: [0.3, 1], rotate: [anime.random(-25, 25), 0], duration: 900, easing: "easeOutElastic(1, .6)" });
 }
+visor.addEventListener("click", () => {
+  anime({
+    targets: visor, opacity: 0, duration: 250, easing: "easeInQuad",
+    complete: () => { visor.hidden = true; orbita.pausa = 1; },
+  });
+});
 
 $("masCaos").addEventListener("click", () => {
   shake = 10;
@@ -633,6 +590,7 @@ $("masCaos").addEventListener("click", () => {
   burst(0, 0, 0, 2500, 3.4, 2.4);
   onda(0xffd23f, 2);
   anime({ targets: "#flash", opacity: [0.7, 0], duration: 600, easing: "easeOutQuad" });
-  for (let k = 0; k < 8; k++) setTimeout(() => crearBouncer(k % 2 ? "twice" : "vernon"), k * 80);
-  for (const b of bouncers) { b.vy = -rand(15, 28); b.vx = rand(-14, 14); b.vr = rand(-25, 25); }
+  // la órbita da un giro rapidísimo y todas las fotos brincan
+  orbita.extra = 7;
+  anime({ targets: fotos.map((f) => f.marco), scale: [1.45, 1], delay: anime.stagger(60), duration: 1000, easing: "easeOutElastic(1, .4)" });
 });

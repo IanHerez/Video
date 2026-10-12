@@ -3,20 +3,20 @@
 Página estática: la cumpleañera elige su fecha en un calendario que flota sobre una galaxia espiral animada
 (three.js, `js/galaxia.js`). Si se equivoca, la página se burla de ella.
 Si elige el **11 de octubre** y le da **Enviar**, la galaxia se colapsa en un agujero negro, explota (three.js + anime.js), empiezan a sonar *Las Mañanitas*
-y Vernon y Twice se ponen a brincar por toda la pantalla.
+y tus fotos flotan en órbita alrededor del título (al tocar una se ve en grande).
 
 ## Lo que tienes que poner tú
 
 | Qué | Dónde |
 | --- | --- |
 | Canción (Las Mañanitas de Cepillín, mp3) | `audio/mananitas.mp3` |
-| Fotos de Vernon | `img/vernon/1.jpg` … `img/vernon/6.jpg` |
-| Fotos de Twice | `img/twice/nayeon.jpg`, `jeongyeon.jpg`, `momo.jpg`, `sana.jpg`, `jihyo.jpg`, `mina.jpg`, `dahyun.jpg`, `chaeyoung.jpg`, `tzuyu.jpg` |
+| Fotos de la galería | `img/fotos/1.jpg` … `img/fotos/8.jpg` |
 
 - Si falta el mp3, suena una versión de emergencia "en kazoo" generada por el navegador.
-- Si falta una foto, sale una tarjeta de colores con el nombre del integrante.
+- Si falta una foto, sale una tarjeta de colores de reemplazo.
 - El nombre de la cumpleañera, la fecha y las rutas de las fotos y la canción se cambian en `js/config.js`.
-  Si tus fotos son `.png` o tienen otros nombres, cambia la lista ahí mismo.
+  Si tus fotos son `.png`, tienen otros nombres o son más/menos de 8, cambia la lista ahí mismo.
+  También puedes ponerle un texto a cada foto: `{ src: "img/fotos/1.jpg", texto: "..." }`.
 - Las fotos se ven mejor si son cuadradas y pesan poco (≤ 300 KB cada una).
 
 ## Probarla en tu compu

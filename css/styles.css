@@ -162,7 +162,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 #fiesta[hidden] { display: none; }
 
-#caos { position: absolute; inset: 0; overflow: hidden; }
 
 .titulo-wrap {
   position: absolute;
@@ -206,34 +205,45 @@ button { font-family: inherit; cursor: pointer; }
   opacity: 0;
 }
 
-/* Tarjetas que brincan */
-.bouncer {
+/* Galería en órbita */
+#galeria { position: absolute; inset: 0; overflow: hidden; z-index: 3; }
+
+.foto {
   position: absolute;
   left: 0; top: 0;
-  will-change: transform;
+  margin: 0;
+  will-change: transform, opacity;
   cursor: pointer;
-  z-index: 3;
+  transform: scale(0);
 }
-.bouncer .inner {
-  position: relative;
+.foto .marco {
+  --c: var(--rosa);
   width: var(--s, 130px);
   height: var(--s, 130px);
-  border-radius: 18px;
-  overflow: visible;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, .92);
+  box-shadow: 0 0 0 3px var(--c), 0 0 34px var(--c), 0 14px 34px rgba(0, 0, 0, .55);
 }
-.bouncer img, .bouncer .placeholder {
+.foto:nth-child(4n + 2) .marco { --c: var(--cyan); }
+.foto:nth-child(4n + 3) .marco { --c: var(--amarillo); }
+.foto:nth-child(4n + 4) .marco { --c: #a66bff; }
+
+.marco img, .marco .placeholder {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 18px;
-  border: 4px solid #fff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
   display: block;
   -webkit-user-drag: none;
   user-select: none;
 }
-.bouncer.vernon img, .bouncer.vernon .placeholder { border-color: var(--cyan); }
-.bouncer.twice img, .bouncer.twice .placeholder { border-color: var(--rosa); }
+.foto figcaption, #visor figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: .8rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .9);
+}
 
 .placeholder {
   display: flex !important;
@@ -241,40 +251,39 @@ button { font-family: inherit; cursor: pointer; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 6px;
   font-weight: 700;
-  line-height: 1.1;
   color: #fff;
+  background: linear-gradient(135deg, #ff5fa8, #a66bff 55%, #3d7bff);
 }
-.vernon .placeholder { background: linear-gradient(135deg, #1b8f88, #3757d6); }
-.twice .placeholder { background: linear-gradient(135deg, #ff5fa8, #ff9a3d); }
-.placeholder .emoji { font-size: calc(var(--s, 130px) * .38); line-height: 1; }
-.placeholder .nombre { font-family: "Bungee", sans-serif; font-size: calc(var(--s, 130px) * .12); margin-top: 4px; }
-.placeholder .nota { font-size: calc(var(--s, 130px) * .075); opacity: .85; margin-top: 2px; }
+.placeholder .emoji { font-size: calc(var(--s, 130px) * .4); line-height: 1; }
+.placeholder .nota { font-size: calc(var(--s, 130px) * .1); opacity: .9; margin-top: 4px; }
 
-.burbuja {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  color: #1a0a2e;
-  font-weight: 700;
-  font-size: .8rem;
-  padding: 6px 10px;
-  border-radius: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
+/* Visor: una foto en grande al tocarla */
+#visor {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(4, 2, 12, .72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: zoom-out;
 }
-.burbuja::after {
-  content: "";
-  position: absolute;
-  top: 100%; left: 50%;
-  margin-left: -6px;
-  border: 6px solid transparent;
-  border-top-color: #fff;
+#visor[hidden] { display: none; }
+#visor .marco.grande {
+  --s: min(78vw, 70vh, 520px);
+  width: var(--s);
+  height: var(--s);
+  border-radius: 26px;
+  overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 4px var(--rosa), 0 0 60px var(--rosa), 0 20px 60px rgba(0, 0, 0, .6);
 }
+#visor figcaption { font-size: 1.1rem; margin-top: 14px; }
 
 .controles {
   position: absolute;
@@ -295,7 +304,4 @@ button { font-family: inherit; cursor: pointer; }
 }
 .controles #mute { background: #fff; padding: 12px 14px; }
 
-@media (max-width: 600px) {
-  .bouncer .inner { --s: 92px; }
-  .burbuja { font-size: .7rem; }
-}
+
