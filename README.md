@@ -2,20 +2,20 @@
 
 Página estática: la cumpleañera elige su fecha en un calendario que flota sobre una galaxia espiral animada
 (three.js, `js/galaxia.js`). Si se equivoca, la página se burla de ella.
-Si elige el **11 de octubre** y le da **Enviar**, la galaxia se colapsa en un agujero negro, explota (three.js + anime.js), empiezan a sonar *Las Mañanitas*
+Si elige el **11 de octubre** y le da **Enviar**, la galaxia se colapsa en un agujero negro, explota (three.js + anime.js), empiezan a sonar *Las Mañanitas* (y luego *Cómo te voy a olvidar*)
 y tus fotos flotan en órbita alrededor del título (al tocar una se ve en grande).
 
-## Lo que tienes que poner tú
+## Archivos de la fiesta
 
 | Qué | Dónde |
 | --- | --- |
-| Canción (Las Mañanitas de Cepillín, mp3) | `audio/mananitas.mp3` |
-| Fotos de la galería | `img/fotos/1.jpg` … `img/fotos/8.jpg` |
+| Canciones (suenan en orden y se repiten) | `audio/mananitas.mp3`, `audio/como-te-voy-a-olvidar.mp3` |
+| Fotos de la galería | `img/fotos/1.jpg` … `img/fotos/5.jpg` |
 
 - Si falta el mp3, suena una versión de emergencia "en kazoo" generada por el navegador.
 - Si falta una foto, sale una tarjeta de colores de reemplazo.
 - El nombre de la cumpleañera, la fecha y las rutas de las fotos y la canción se cambian en `js/config.js`.
-  Si tus fotos son `.png`, tienen otros nombres o son más/menos de 8, cambia la lista ahí mismo.
+  Si tus fotos son `.png`, tienen otros nombres o agregas más, cambia la lista ahí mismo.
   También puedes ponerle un texto a cada foto: `{ src: "img/fotos/1.jpg", texto: "..." }`.
 - Las fotos se ven mejor si son cuadradas y pesan poco (≤ 300 KB cada una).
 

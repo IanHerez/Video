@@ -9,9 +9,12 @@ window.CONFIG = {
   dia: 11,
   mes: 10, // 1 = enero ... 10 = octubre
 
-  // Las Mañanitas de Cepillín (sube tu mp3 con este nombre).
-  // Si no existe, suena una versión de emergencia "en kazoo" hecha por el navegador.
-  audio: "audio/mananitas.mp3",
+  // Canciones de la fiesta: suenan en este orden y al terminar la última vuelve a empezar.
+  // Si la primera no existe, suena una versión de emergencia "en kazoo" hecha por el navegador.
+  canciones: [
+    "audio/mananitas.mp3",
+    "audio/como-te-voy-a-olvidar.mp3",
+  ],
 
   // Fotos que flotan en órbita alrededor del título durante la fiesta.
   // Pon los archivos en img/fotos/ con estos nombres (o cambia la lista; pueden ser más o menos).
@@ -23,8 +26,5 @@ window.CONFIG = {
     "img/fotos/3.jpg",
     "img/fotos/4.jpg",
     "img/fotos/5.jpg",
-    "img/fotos/6.jpg",
-    "img/fotos/7.jpg",
-    "img/fotos/8.jpg",
   ],
 };

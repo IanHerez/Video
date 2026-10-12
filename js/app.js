@@ -128,7 +128,14 @@ anime({
 //  AUDIO: Las Mañanitas (mp3) o kazoo de emergencia
 // ============================================================
 const cancion = $("cancion");
-cancion.src = C.audio;
+let pista = 0;
+cancion.src = C.canciones[0];
+// al terminar una canción sigue la siguiente (y al final vuelve a la primera)
+cancion.addEventListener("ended", () => {
+  pista = (pista + 1) % C.canciones.length;
+  cancion.src = C.canciones[pista];
+  cancion.play().catch(() => {});
+});
 let ctx = null;
 let kazooTimer = null;
 let silenciado = false;
