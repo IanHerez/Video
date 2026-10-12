@@ -1,4 +1,5 @@
 import * as THREE from "./vendor/three.module.min.js";
+import { crearGalaxia } from "./galaxia.js";
 
 const C = window.CONFIG;
 const $ = (id) => document.getElementById(id);
@@ -308,26 +309,15 @@ function onda(color = 0xffffff, velocidad = 1.6) {
   rings.push({ m, s: 1, v: velocidad });
 }
 
-// Fondo de estrellitas que gira
-const estrellas = (() => {
-  const n = 1500;
-  const pos = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    pos[i * 3] = rand(-300, 300);
-    pos[i * 3 + 1] = rand(-200, 200);
-    pos[i * 3 + 2] = rand(-300, 0);
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({ size: 1.4, map: sprite, color: 0xffe6f5, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
-  const p = new THREE.Points(geo, mat);
-  scene.add(p);
-  return p;
-})();
+// Galaxia de fondo (landing) + estrellas lejanas que se quedan para la fiesta
+const galaxia = crearGalaxia(scene, renderer, camera);
+const reloj = new THREE.Clock();
 
 let shake = 0;
 function loop() {
   requestAnimationFrame(loop);
+  const dt = Math.min(reloj.getDelta(), 0.05);
+  galaxia.update(reloj.elapsedTime, dt);
   for (let i = bursts.length - 1; i >= 0; i--) {
     const b = bursts[i];
     const p = b.pts.geometry.attributes.position.array;
@@ -353,8 +343,6 @@ function loop() {
       rings.splice(i, 1);
     }
   }
-  estrellas.rotation.z += 0.0008;
-  estrellas.rotation.y += 0.0003;
   camera.position.x = (Math.random() - 0.5) * shake;
   camera.position.y = (Math.random() - 0.5) * shake;
   shake *= 0.92;
@@ -382,7 +370,8 @@ function empezarFiesta() {
   cancion.muted = true;
   mp3Listo = cancion.play().then(() => true, () => false);
 
-  // tiembla todo antes de explotar
+  // la galaxia se colapsa en un agujero negro mientras tiembla todo
+  galaxia.colapsar(1050);
   let n = 0;
   const temblor = setInterval(() => {
     n++;
@@ -396,6 +385,7 @@ function empezarFiesta() {
 function explotar() {
   boom();
   shake = 14;
+  galaxia.explotar();
   anime({ targets: "#flash", opacity: [1, 0], duration: 1100, easing: "easeOutQuad" });
   anime({
     targets: "#landing",
@@ -408,7 +398,6 @@ function explotar() {
   onda(0xffffff, 2.4);
   setTimeout(() => onda(0xff3d9a, 1.8), 120);
   setTimeout(() => onda(0x2ee6d6, 1.4), 260);
-  anime({ targets: estrellas.material, opacity: [0, 0.8], duration: 2500, easing: "easeOutQuad" });
 
   document.body.classList.add("fiesta");
   ponerCancion();

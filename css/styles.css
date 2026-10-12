@@ -17,8 +17,8 @@ html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(ellipse at top, var(--bg2), var(--bg) 70%);
-  background-color: var(--bg);
+  background: radial-gradient(ellipse at 50% 45%, #150a2e 0%, #07031a 55%, #020108 100%);
+  background-color: #020108;
   color: var(--text);
   font-family: "Fredoka", system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -47,17 +47,30 @@ button { font-family: inherit; cursor: pointer; }
   line-height: 1.1;
   margin: 0;
 }
-.pregunta span { color: var(--rosa); }
+.pregunta { text-shadow: 0 0 24px rgba(166, 107, 255, .55), 0 2px 0 rgba(0, 0, 0, .4); }
+.pregunta span {
+  color: var(--rosa);
+  background: linear-gradient(90deg, var(--rosa), var(--amarillo), var(--cyan), var(--rosa));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brillo 6s linear infinite;
+  filter: drop-shadow(0 0 14px rgba(255, 61, 154, .55));
+}
+@keyframes brillo { to { background-position: 300% 0; } }
 
-.sub { margin: 0; color: var(--muted); font-size: 1rem; }
+.sub { margin: 0; color: var(--muted); font-size: 1rem; text-shadow: 0 1px 8px rgba(0, 0, 0, .8); }
 
 .calendario {
   width: min(360px, 100%);
-  background: var(--card);
-  border: 2px solid var(--line);
-  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(40, 22, 80, .38), rgba(12, 6, 30, .42));
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 22px;
   padding: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+  -webkit-backdrop-filter: blur(5px) saturate(150%);
+  backdrop-filter: blur(5px) saturate(150%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5), 0 0 40px rgba(166, 107, 255, .18), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
 
 .cal-head {
@@ -70,8 +83,8 @@ button { font-family: inherit; cursor: pointer; }
 .cal-nav {
   width: 40px; height: 40px;
   border-radius: 12px;
-  border: 2px solid var(--line);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .18);
+  background: rgba(255, 255, 255, .04);
   color: var(--text);
   font-size: 1.5rem;
   line-height: 1;
@@ -93,9 +106,10 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text);
   font-size: 1rem;
   font-weight: 600;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .9);
   transition: background .15s, transform .15s;
 }
-.dia:hover { background: var(--line); transform: scale(1.08); }
+.dia:hover { background: rgba(255, 255, 255, .12); transform: scale(1.08); }
 .dia.sel { background: var(--rosa); color: #fff; box-shadow: 0 0 18px rgba(255, 61, 154, .7); }
 .dia.vacio { pointer-events: none; }
 
@@ -105,6 +119,7 @@ button { font-family: inherit; cursor: pointer; }
   max-width: 360px;
   font-weight: 600;
   color: var(--amarillo);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .9);
 }
 
 .aceptar {

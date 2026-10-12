@@ -1,7 +1,8 @@
 # 🎂 Página de cumpleaños (con caos)
 
-Página estática: la cumpleañera elige su fecha en un calendario. Si se equivoca, la página se burla de ella.
-Si elige el **11 de octubre**, todo explota (three.js + anime.js), empiezan a sonar *Las Mañanitas*
+Página estática: la cumpleañera elige su fecha en un calendario que flota sobre una galaxia espiral animada
+(three.js, `js/galaxia.js`). Si se equivoca, la página se burla de ella.
+Si elige el **11 de octubre** y le da **Enviar**, la galaxia se colapsa en un agujero negro, explota (three.js + anime.js), empiezan a sonar *Las Mañanitas*
 y Vernon y Twice se ponen a brincar por toda la pantalla.
 
 ## Lo que tienes que poner tú
